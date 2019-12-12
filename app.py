@@ -5,23 +5,39 @@ import string
 import sqlite3 as lite
 import re
 import os
+import subprocess
 
 app = Flask(__name__)
 
 DATABASE = "./link.db"
 
+
 if not os.path.exists(DATABASE):
-    con = lite.connect(DATABASE)
-    cursor = con.cursor()
-    cursor.execute("CREATE TABLE url (ID INTEGER PRIMARY KEY AUTOINCREMENT, ORIGURL TEXT, SHORTURL TEXT UNIQUE);")
-    con.commit()
-    cur.execute("INSERT INTO url VALUES('', 'abc.com', 'xyzz');")
-    con.commit()
-    con.close
+	con = lite.connect(DATABASE)
+	cursor = con.cursor()
+	cursor.execute("CREATE TABLE url (ID INTEGER PRIMARY KEY AUTOINCREMENT, ORIGURL TEXT, SHORTURL TEXT UNIQUE);")
+	con.commit()
+	cursor.execute("INSERT INTO url VALUES('1', 'abc.com', 'xyzz');")
+	con.commit()
+	con.close()
+
+
+def writeToDB(longurl, shorturl):
+	con = lite.connect(DATABASE)
+	cursor = con.cursor()
+	cursor.execute("INSERT INTO url (ID, ORIGURL, SHORTURL) VALUES(?,?,?)", (None, longurl, shorturl) )
+
+#	data_touple = (longurl, shorturl)
+#	cursor.execute(sqlite_insert_q, data_touple)
+
+	con.commit()
+	con.close()
+
+	subprocess.call(["sudo", "python3", "nginx-from-db.py"])
 
 def randomString(stringLength=4):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range (stringLength))
+	letters = string.ascii_lowercase
+	return ''.join(random.choice(letters) for i in range (stringLength))
 
 
 
@@ -33,7 +49,7 @@ def createNginx(url, shorturl):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+	return render_template('index.html')
 
 
 
@@ -41,22 +57,30 @@ def index():
 def index2():
     #connect to the database
 
+	url = request.args.get('url')
+	longurl = url
+	pattern = re.compile(r'(http|ftp|https)://([\w-]+(?:(?:.[\w-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', re.IGNORECASE)
+	result = re.search(pattern, url)
+	if result:
+		shorturl = randomString()
+		nginx = createNginx(url, shorturl)
 
-    url = request.args.get('url')
-    pattern = re.compile(r'(http|ftp|https)://([\w-]+(?:(?:.[\w-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', re.IGNORECASE)
-    result = re.search(pattern, url)
-    if result:
-        shorturl = randomString()
-        nginx = createNginx(url, shorturl)
-        context = {'url': url, 'shorturl': shorturl, 'nginx': nginx}
-        return render_template('url.html', **context)
+		writeToDB(longurl, shorturl)
 
-    else:
-        wrongurl = 'The URL provided was wrong.'
-        context = {'wrongurl': wrongurl}
-        return render_template('index.html', **context)
+		con = lite.connect(DATABASE)
+		cursor = con.cursor()
+		cursor.execute("SELECT * FROM url;")
+		urldata = cursor.fetchall()
+
+		context = {'url': url, 'shorturl': shorturl}
+		return render_template('url.html', **context, urldata=urldata)
+
+	else:
+		wrongurl = 'The URL provided was wrong.'
+		context = {'wrongurl': wrongurl}
+		return render_template('index.html', **context)
 
 
 
 if __name__ == '__main__':
-   app.run(host='192.168.1.5', port=42099, debug=True)
+	app.run(host='192.168.1.5', port=42099, debug=True)

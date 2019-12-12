@@ -1,9 +1,41 @@
-
 <html>
-    <h1>Your URL is: {{ url }}</h1>
-    <h2>Your new URL is: miraa.se/{{ shorturl }}</h2>
-    <h2>{{ nginx }}</h2>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+
    <body>
+	<br>
+    <h1>Your URL {{ url }}</h1>
+    <h1>Your new URL is: <a href="https://miraa.se/{{ shorturl }}">miraa.se/{{ shorturl }}</a></h1>
+	<table>
+		{% for item in urldata %}
+
+	<tr>
+		<td>{{item[0]}}</td>
+		<td>{{item[1]}}</td>
+		<td>{{item[2]}}</td><br>
+
+	</tr>
+		{% endfor %}
+
+	</table>
+	<br>
     <a href="/">GO back</a>
    </body>
 </html>
