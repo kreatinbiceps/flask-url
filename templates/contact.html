@@ -1,6 +1,8 @@
+
+
 <html>
   <head>
-    <title>FM ShortURL</title>
+    <title>About - FM ShortURL</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
   </head>
@@ -8,9 +10,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="topnav" id="myTopnav">
-  <a href="/" class="active">Home</a>
-  <a href="/contact">Contact</a>
+  <a href="/">Home</a>
+  <a href="/contact" class="active">Contact</a>
   <a href="/about">About</a>
+ 
   <a href="javascript:void(0);" class="icon" onclick="myFunction()">
     <i class="fa fa-bars"></i>
   </a>
@@ -20,28 +23,18 @@
 
    <body>
        <div class="container">
-        <h1 class="logo">FM URL Shortener</h1>
-	<br>
-	<strong><nav>
-    <p>Your URL: {{ url }}</p>
-    <h1>Your new URL is: <a href="https://miraa.se/{{ shorturl }}">miraa.se/{{ shorturl }}</a></h1>
-	<!--
-	<table>
-		{% for item in urldata %}
+        <h1 class="logo">Contact</h1>
+        <br>
+        <strong><nav>
 
-	<tr>
-		<td>{{item[0]}}</td>
-		<td>{{item[1]}}</td>
-		<td>{{item[2]}}</td><br>
-
-	</tr>
-		{% endfor %}
-
-	</table>
-	-->
-	<br>
-    <a href="/">Go back to start</a>
-	</div></strong></nav>
+		
+		
+	<p>Email: filip.martensson@telenorinpli.se</p>		
+		
+		
+		
+		
+        </div></strong></nav>
    </body>
 
 
@@ -51,4 +44,7 @@
 
 
 </html>
+
+
+
 

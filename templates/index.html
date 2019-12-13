@@ -1,5 +1,27 @@
 <html>
+
+  <head>
+    <title>FM ShortURL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  </head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="topnav" id="myTopnav">
+  <a href="/" class="active">Home</a>
+  <a href="/contact">Contact</a>
+  <a href="/about">About</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+
    <body>
+	<div class="container">
+	<h1 class="logo">FM URL Shortener</h1>
+	<br><br>
+	<strong><nav>
       <form action = "/url" method = "get">
          <p>Enter your URL:</p>
          <p><input type = "text" name = "url" /></p>
@@ -9,5 +31,18 @@
         <p>{{ wrongurl }}</p>
         <p>did you forget http(s)://?</p>
     {% endif %}
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+	</strong></nav>
+
    </body>
+
+
+	<div class="footer">	
+	<p>Created by FM. Done in Flask</p>
+	</div>
+
 </html>
